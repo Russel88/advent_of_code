@@ -35,7 +35,8 @@ def n_steps(node, rounds = 1):
 
         if nodeend == 'Z':
             rounds -= 1
-            nodeend = 'A'
+            nodeend = None
+            print(node)
 
         steps += 1
 
@@ -44,7 +45,9 @@ def n_steps(node, rounds = 1):
 
 current = [k for k in network if k[2] == 'A']
 
+print('1 Step')
 step_count1 = [n_steps(x, 1) for x in current]
+print('2 Steps')
 step_count2 = [n_steps(x, 2) for x in current]
 
 print([x/y for x,y in zip(step_count2, step_count1)])
