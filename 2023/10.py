@@ -72,6 +72,7 @@ longest = max([len(x) for x in cycles])
 
 # Second
 path = [x for x in cycles if len(x) == longest][0]
+points = [[int(y) for y in x.split(',')] for x in path]
 new = np.zeros(matrix.shape)
 
 n = 1
@@ -80,6 +81,17 @@ for node in path:
     new[int(j), int(i)] = 1
     n += 1
 
+# Alternative to second
+# Area with shoelace
+from skspatial.measurement import area_signed
+A = area_signed(points)
+## Pick's theorem (area = interior + boundary/2 - 1)
+print(A - (len(path) / 2) + 1)
+
+sys.exit()
+
+
+# Second original
 def find_enclosed(array, enh = False):
     binary = np.where(array > 0, 1, 0).astype(np.uint8)
     contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
