@@ -1,29 +1,40 @@
 import sys
 import itertools
+import re
 
-def combi(x, n=None):
-    new = [[0]*len(x)]
-    for ii in range(len(x)):
-        if x[ii] == '.':
-            continue
-        if x[ii] == '#':
-            for ii2 in range(len(new)):
-                new[ii2][ii] = 1
-        if x[ii] == '?':
-            for ii2 in range(len(new)):
-                tmp = new[ii2][:]
-                tmp[ii] = 1
-                new.append(tmp)
+def combi(x, n):
+    #new = [[0]*len(x)]
+    #for ii in range(len(x)):
+    #    if x[ii] == '.':
+    #        continue
+    #    if x[ii] == '#':
+    #        for ii2 in range(len(new)):
+    #            new[ii2][ii] = 1
+    #    if x[ii] == '?':
+    #        for ii2 in range(len(new)):
+    #            tmp = new[ii2][:]
+    #            tmp[ii] = 1
+    #            new.append(tmp)
     
-    if n is not None:
-        orig = new[:]
-        for y in range(n - 1):
-            for ii2 in range(len(new)):
-                new.append(new[ii2][:] + [1])
-                new.append(new[ii2][:] + [0])
-                
-            new = [x[0] + x[1] for x in itertools.product(new, orig)]
-            # Separately for 0 and 1 take the new lists and add the orig lists to them in the same order then combine the 0 and 1 new lists 
+
+    certain = x.count('#')
+    remain = n - certain
+
+    scaffold = [0] * len(x)
+    quest = list()
+    for ii in range(len(x)):
+        if x[ii] == '#':
+            scaffold[ii] = 1
+        if x[ii] == '?':
+            quest.append(ii)
+
+    new = list()
+    potential = itertools.combinations(quest, remain)
+    for ii in potential:
+        tmp = scaffold.copy()
+        for jj in ii:
+            tmp[jj] = 1
+        new.append(tmp)
 
     return(new)
 
@@ -52,9 +63,11 @@ with open(sys.argv[1]) as fh:
         #data.append(combinations)
         
         # Second
-        numbers = numbers * 3
+        numbers = numbers * 5
+        pattern = pattern + '?' + pattern + '?' + pattern + '?' + pattern + '?' + pattern
+        print(pattern)
         
-        combinations = sum([check(x, numbers) for x in combi(pattern, n=3)])
+        combinations = sum([check(x, numbers) for x in combi(pattern, n = sum(numbers))])
         print(combinations)
         data.append(combinations)
 
